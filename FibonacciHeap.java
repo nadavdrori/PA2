@@ -6,6 +6,19 @@
 public class FibonacciHeap {
     private HeapNode min;
     private HeapNode first;
+
+    public HeapNode getMin() {
+        return min;
+    }
+
+    public HeapNode getFirst() {
+        return first;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     private int size;
 
     /**
@@ -181,7 +194,6 @@ public class FibonacciHeap {
      * (for example HeapNode), do it in this file, not in another file.
      */
     public static class HeapNode {
-
         public int key;
         public int rank;
         public boolean mark;
@@ -196,6 +208,30 @@ public class FibonacciHeap {
             this.key = key;
             this.mark = false;
             this.rank = 0;
+        }
+
+        public int getRank() {
+            return rank;
+        }
+
+        public boolean getMarked() {
+            return mark;
+        }
+
+        public HeapNode getChild() {
+            return child;
+        }
+
+        public HeapNode getNext() {
+            return next;
+        }
+
+        public HeapNode getPrev() {
+            return prev;
+        }
+
+        public HeapNode getParent() {
+            return parent;
         }
 
         public int getKey() {
