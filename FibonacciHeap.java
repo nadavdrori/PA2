@@ -45,16 +45,15 @@ public class FibonacciHeap {
             size++;
             return first;
         } else {
-//            HeapNode node = new HeapNode(key);
-//            node.next = first;
-//            node.prev = first.prev;
-//            first.prev.next = node;
-//            first.prev = node;
-//            if(node.key < min.key)
-//                min = node;
-//            size++;
-//            return node;
-            return null;// remove this line
+            HeapNode node = new HeapNode(key);
+            node.next = first;
+            node.prev = first.prev;
+            first.prev.next = node;
+            first.prev = node;
+            if(node.key < min.key)
+                min = node;
+            size++;
+            return node;
         }
     }
 
