@@ -8,6 +8,7 @@ public class FibonacciHeap {
     private HeapNode first;
     private int marked = 0;
     private int size;
+    private static int cuts = 0;
 
     public HeapNode getMin() {
         return min;
@@ -206,6 +207,7 @@ public class FibonacciHeap {
     }
 
     private void remove_decreased_child(HeapNode x) {
+        cuts++;
         this.setMark(x.getParent(),true);
         x.getParent().rank--;
         if (x.parent.child.key == x.key) {
@@ -259,7 +261,7 @@ public class FibonacciHeap {
      * from its parent (during decreaseKey/delete methods).
      */
     public static int totalCuts() {
-        return -456; // should be replaced by student code
+        return cuts;
     }
 
     /**
