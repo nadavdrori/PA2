@@ -6,6 +6,8 @@
 public class FibonacciHeap {
     private HeapNode min;
     private HeapNode first;
+    private int marked = 0;
+    private int size;
 
     public HeapNode getMin() {
         return min;
@@ -19,7 +21,14 @@ public class FibonacciHeap {
         return size;
     }
 
-    private int size;
+    private void setMark(HeapNode node, boolean mark){
+        node.mark = mark;
+        if (mark == true) {this.marked++;}
+        else
+            this.marked--;
+    }
+
+
 
     /**
      * public boolean isEmpty()
@@ -56,14 +65,14 @@ public class FibonacciHeap {
             return node;
         }
     }
-    public HeapNode insert(HeapNode inserted) {
+    public HeapNode insert(HeapNode node_to_insert) {
         if (isEmpty()) {
-            first = inserted;
+            first = node_to_insert;
             min = first;
             size++;
             return first;
         } else {
-            HeapNode node = inserted;
+            HeapNode node = node_to_insert;
             node.next = first;
             node.prev = first.prev;
             first.prev.next = node;
@@ -120,7 +129,17 @@ public class FibonacciHeap {
      * Melds heap2 with the current heap.
      */
     public void meld(FibonacciHeap heap2) {
-        return; // should be replaced by student code
+        if (!heap2.isEmpty()) {
+            this.marked += heap2.marked;
+            this.size += heap2.size;
+            if (heap2.min.key < this.min.key)
+                this.min = heap2.min;
+            HeapNode last_tree = this.first.prev;
+            last_tree.next = heap2.first;
+            this.first.prev = heap2.first.prev;
+            heap2.first.prev.next = this.first;
+            heap2.first.prev = last_tree;
+        }
     }
 
     /**
@@ -164,20 +183,20 @@ public class FibonacciHeap {
         int new_key = x.key - delta;
         x.key = new_key;
         HeapNode root = x.find_root();
-        if ((x.key < x.parent.key) && (x.parent.mark == false)) {
+        if ((x.key < x.parent.key) && (x.parent.getMark() == false)) {
             remove_decreased_child(x);
             this.insert(x);
         }
-        else if ((x.key < x.parent.key) && (x.parent.mark == true)) {
-            x.mark = true;
+        else if ((x.key < x.parent.key) && (x.parent.getMark() == true)) {
+            this.setMark(x,true);
             HeapNode first_not_marked = cascading_cut(x);
-            first_not_marked.mark = true;
+            this.setMark(first_not_marked,true);
         }
     }
 
     private HeapNode cascading_cut(HeapNode x) {
         HeapNode parent;
-        while (x.mark == true) {
+        while (x.getMark() == true) {
             parent = x.parent;
             remove_decreased_child(x);
             this.insert(x);
@@ -187,15 +206,15 @@ public class FibonacciHeap {
     }
 
     private void remove_decreased_child(HeapNode x) {
-        x.parent.mark = true;
-        x.parent.rank--;
+        this.setMark(x.getParent(),true);
+        x.getParent().rank--;
         if (x.parent.child.key == x.key) {
             x.parent.child = x.next;
         }
         x.parent = null;
         x.next.prev = x.prev;
         x.prev.next = x.next;
-        x.mark = false;
+        this.setMark(x,false);
     }
 
     /**
@@ -204,7 +223,7 @@ public class FibonacciHeap {
      * This function returns the current number of non-marked items in the heap
      */
     public int nonMarked() {
-        return -232; // should be replaced by student code
+        return this.marked;
     }
 
     /**
@@ -282,8 +301,11 @@ public class FibonacciHeap {
         public int getRank() {
             return rank;
         }
+        public void setRank(int rank) {
+            this.rank = rank;
+        }
 
-        public boolean getMarked() {
+        public boolean getMark() {
             return mark;
         }
 
@@ -302,6 +324,7 @@ public class FibonacciHeap {
         public HeapNode getParent() {
             return parent;
         }
+        public void setParent(HeapNode parent) {this.parent = parent; }
 
         public int getKey() {
             return this.key;
