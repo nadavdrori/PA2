@@ -63,7 +63,24 @@ public class FibonacciHeap {
      * Deletes the node containing the minimum key.
      */
     public void deleteMin() {
-        return; // should be replaced by student code
+//        if (isEmpty())
+//            return;
+//        if (min.next == min) {
+//            min = null;
+//            first = null;
+//            size--;
+//            return;
+//        }
+//        HeapNode node = min.next;
+//        while (node != min) {
+//            node.parent = null;
+//            node = node.next;
+//        }
+//        min.prev.next = min.next;
+//        min.next.prev = min.prev;
+//        min = min.next;
+//        size--;
+//        consolidate();
 
     }
 
@@ -115,7 +132,8 @@ public class FibonacciHeap {
      * It is assumed that x indeed belongs to the heap.
      */
     public void delete(HeapNode x) {
-        return; // should be replaced by student code
+        decreaseKey(x, Integer.MIN_VALUE);
+        deleteMin();
     }
 
     /**
