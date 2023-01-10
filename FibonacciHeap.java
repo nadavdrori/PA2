@@ -56,6 +56,24 @@ public class FibonacciHeap {
             return node;
         }
     }
+    public HeapNode insert(HeapNode inserted) {
+        if (isEmpty()) {
+            first = inserted;
+            min = first;
+            size++;
+            return first;
+        } else {
+            HeapNode node = inserted;
+            node.next = first;
+            node.prev = first.prev;
+            first.prev.next = node;
+            first.prev = node;
+            if(node.key < min.key)
+                min = node;
+            size++;
+            return node;
+        }
+    }
 
     /**
      * public void deleteMin()
@@ -143,7 +161,41 @@ public class FibonacciHeap {
      * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
      */
     public void decreaseKey(HeapNode x, int delta) {
-        return; // should be replaced by student code
+        int new_key = x.key - delta;
+        x.key = new_key;
+        HeapNode root = x.find_root();
+        if ((x.key < x.parent.key) && (x.parent.mark == false)) {
+            remove_decreased_child(x);
+            this.insert(x);
+        }
+        else if ((x.key < x.parent.key) && (x.parent.mark == true)) {
+            x.mark = true;
+            HeapNode first_not_marked = cascading_cut(x);
+            first_not_marked.mark = true;
+        }
+    }
+
+    private HeapNode cascading_cut(HeapNode x) {
+        HeapNode parent;
+        while (x.mark == true) {
+            parent = x.parent;
+            remove_decreased_child(x);
+            this.insert(x);
+            x = parent;
+        }
+        return x;
+    }
+
+    private void remove_decreased_child(HeapNode x) {
+        x.parent.mark = true;
+        x.parent.rank--;
+        if (x.parent.child.key == x.key) {
+            x.parent.child = x.next;
+        }
+        x.parent = null;
+        x.next.prev = x.prev;
+        x.prev.next = x.next;
+        x.mark = false;
     }
 
     /**
@@ -253,6 +305,14 @@ public class FibonacciHeap {
 
         public int getKey() {
             return this.key;
+        }
+
+        public HeapNode find_root(){
+            HeapNode x = this;
+            while (x.parent != null){
+                x = x.parent;
+            }
+            return x;
         }
     }
 }
