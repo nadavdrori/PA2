@@ -184,11 +184,11 @@ public class FibonacciHeap {
         int new_key = x.key - delta;
         x.key = new_key;
         HeapNode root = x.find_root();
-        if ((x.key < x.parent.key) && (x.parent.getMark() == false)) {
+        if ((x.key < x.parent.key) && (x.parent.getMarked() == false)) {
             remove_decreased_child(x);
             this.insert(x);
         }
-        else if ((x.key < x.parent.key) && (x.parent.getMark() == true)) {
+        else if ((x.key < x.parent.key) && (x.parent.getMarked() == true)) {
             this.setMark(x,true);
             HeapNode first_not_marked = cascading_cut(x);
             this.setMark(first_not_marked,true);
@@ -197,7 +197,7 @@ public class FibonacciHeap {
 
     private HeapNode cascading_cut(HeapNode x) {
         HeapNode parent;
-        while (x.getMark() == true) {
+        while (x.getMarked() == true) {
             parent = x.parent;
             remove_decreased_child(x);
             this.insert(x);
@@ -307,7 +307,7 @@ public class FibonacciHeap {
             this.rank = rank;
         }
 
-        public boolean getMark() {
+        public boolean getMarked() {
             return mark;
         }
 

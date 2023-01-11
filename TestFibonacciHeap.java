@@ -135,7 +135,7 @@ class HeapPrinter {
         String title = String.format(" Key: %d ", heapNode.getKey());
         List<String> content = Arrays.asList(
                 String.format(" Rank: %d ", heapNode.getRank()),
-                String.format(" Marked: %b ", heapNode.getMark()),
+                String.format(" Marked: %b ", heapNode.getMarked()),
                 String.format(" Parent: %s ", keyify.apply(heapNode::getParent)),
                 String.format(" Next: %s ", keyify.apply(heapNode::getNext)),
                 String.format(" Prev: %s ", keyify.apply(heapNode::getPrev)),
@@ -252,7 +252,7 @@ public class TestFibonacciHeap {
         do {
             numberOfTrees++;
             assertNull(node.getParent());
-            assertFalse(node.getMark());
+            assertFalse(node.getMarked());
             if (node.getKey() < actualMin.getKey()) {
                 actualMin = node;
             }
@@ -355,7 +355,7 @@ public class TestFibonacciHeap {
             // Check current node
             actualSize++;
             stack.push(node.getNext());
-            numberOfMarked += node.getMark() ? 1 : 0;
+            numberOfMarked += node.getMarked() ? 1 : 0;
 
             assertValidHeapNodeChildren(node);
 
@@ -1916,7 +1916,7 @@ public class TestFibonacciHeap {
         FibonacciHeap.HeapNode node = heap.getFirst();
         while (node != null) {
             assertTrue(node.getChild() != null ? node.getRank() == 1 : node.getRank() == 0);
-            assertEquals(node.getParent() != null, node.getMark());
+            assertEquals(node.getParent() != null, node.getMarked());
             node = node.getChild();
         }
 
