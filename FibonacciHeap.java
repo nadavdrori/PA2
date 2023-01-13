@@ -10,6 +10,8 @@ public class FibonacciHeap {
     private int size;
     private static int cuts = 0;
 
+    private final float GOLDEN_RATIO = (float) 1.62;
+
     public HeapNode getMin() {
         return min;
     }
@@ -143,14 +145,59 @@ public class FibonacciHeap {
         } while (curr != first);
     }
 
+//    private void consolidation() {
+//        int maxDegree = (int) (Math.log(size) / Math.log(GOLDEN_RATIO));
+//        HeapNode[] arr = new HeapNode[maxDegree + 1];
+//        HeapNode curr = first;
+//        do {
+//            HeapNode next = curr.next;
+//            int degree = curr.degree;
+//            while (arr[degree] != null) {
+//                HeapNode other = arr[degree];
+//                if (curr.key > other.key) {
+//                    HeapNode temp = curr;
+//                    curr = other;
+//                    other = temp;
+//                }
+//                if (other == first)
+//                    first = curr;
+//                if (other == min)
+//                    min = curr;
+//                other.next.prev = other.prev;
+//                other.prev.next = other.next;
+//                curr.degree++;
+//                if (curr.child == null) {
+//                    curr.child = other;
+//                    other.next = other;
+//                    other.prev = other;
+//                } else {
+//                    other.next = curr.child;
+//                    other.prev = curr.child.prev;
+//                    curr.child.prev.next = other;
+//                    curr.child.prev = other;
+//                }
+//                other.parent = curr;
+//                setMark(other, false);
+//                arr[degree] = null;
+//                degree++;
+//            }
+//            arr[degree] = curr;
+//            curr = next;
+//        } while (curr != first);
+//        min = first;
+//        for (int i = 0; i < arr.length; i++) {
+//            if (arr[i] != null && arr[i].key < min.key)
+//                min = arr[i];
+//        }
+//    }
     private void consolidation() {
         if (isEmpty())
             return;
-        int maxDegree = (int) (Math.log(size) / Math.log(2));
+        int maxDegree = (int) (Math.ceil(Math.log(size) / Math.log(GOLDEN_RATIO)));
         HeapNode[] arr = new HeapNode[maxDegree + 1]; // TODO: Check if should add one
         HeapNode node = first;
-        HeapNode next = node.next;
         do {
+            HeapNode next = node.next;
             int rankOfCurrentNode = node.rank;
             while (arr[rankOfCurrentNode] != null) {
                 HeapNode other = arr[rankOfCurrentNode];
@@ -159,13 +206,15 @@ public class FibonacciHeap {
                     node = other;
                     other = temp;
                 }
+                if (other == first)
+                    first = node;
                 if (other == min)
                     min = node;
 
                 // Connect node as parent of other
                 other.next.prev = other.prev;
                 other.prev.next = other.next;
-                other.parent = node;
+                node.rank++;
                 if (node.child == null) {
                     node.child = other;
                     other.next = other;
@@ -176,17 +225,22 @@ public class FibonacciHeap {
                     node.child.prev.next = other;
                     node.child.prev = other;
                 }
-                node.rank++;
+                other.parent = node;
+                setMark(other, false);
                 arr[rankOfCurrentNode] = null;
                 rankOfCurrentNode++;
             }
+
             // Update node to the next bucket
             arr[rankOfCurrentNode] = node;
             node = next;
-            next = node.next;
         } while (node != first);
         min = first;
 
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != null && arr[i].key < min.key)
+                min = arr[i];
+        }
 //        // disconnect all roots in buckets
 //        for (int i = 0; i < arr.length; i++) {
 //            if (arr[i] != null) {
@@ -195,23 +249,23 @@ public class FibonacciHeap {
 //            }
 //        }
         // Update the min and connect all the roots
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != null) {
-                if (min == null) {
-                    min = arr[i];
-                    first = min;
-                } else {
-                    // Add to the end of roots list
-                    arr[i].next = first;
-                    arr[i].prev = first.prev;
-                    first.prev.next = arr[i];
-                    first.prev = arr[i];
-                    // Update min
-                    if (arr[i].key < min.key)
-                        min = arr[i];
-                }
-            }
-        }
+//        for (int i = 0; i < arr.length; i++) {
+//            if (arr[i] != null) {
+//                if (min == null) {
+//                    min = arr[i];
+//                    first = min;
+//                } else {
+//                    // Add to the end of roots list
+//                    arr[i].next = first;
+//                    arr[i].prev = first.prev;
+//                    first.prev.next = arr[i];
+//                    first.prev = arr[i];
+//                    // Update min
+//                    if (arr[i].key < min.key)
+//                        min = arr[i];
+//                }
+//            }
+//        }
     }
 
 
