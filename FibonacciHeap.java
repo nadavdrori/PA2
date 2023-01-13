@@ -194,7 +194,7 @@ public class FibonacciHeap {
         if (isEmpty())
             return;
         int maxDegree = (int) (Math.ceil(Math.log(size) / Math.log(GOLDEN_RATIO)));
-        HeapNode[] arr = new HeapNode[maxDegree + 1]; // TODO: Check if should add one
+        HeapNode[] arr = new HeapNode[maxDegree + 1];
         HeapNode node = first;
         do {
             HeapNode next = node.next;
@@ -287,6 +287,12 @@ public class FibonacciHeap {
      * Melds heap2 with the current heap.
      */
     public void meld(FibonacciHeap heap2) {
+        if (this.isEmpty()) {
+            this.first = heap2.first;
+            this.min = heap2.min;
+            this.size = heap2.size;
+            return;
+        }
         if (!heap2.isEmpty()) {
             this.markedAmount += heap2.markedAmount;
             this.size += heap2.size;
