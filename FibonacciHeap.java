@@ -97,7 +97,7 @@ public class FibonacciHeap {
         if (isEmpty())
             return;
         size--;
-        if (min == first) {
+        if (min == first && min.next == min) {
             if (min.child == null) {
                 first = null;
                 min = null;
@@ -118,6 +118,7 @@ public class FibonacciHeap {
     }
 
     private void removeMin() {
+        first = min.next;
         if (min.child == null) {
             min.prev.next = min.next;
             min.next.prev = min.prev;
@@ -183,16 +184,16 @@ public class FibonacciHeap {
             arr[rankOfCurrentNode] = node;
             node = next;
             next = node.next;
-        }while (node != first);
+        } while (node != first);
         min = first;
 
-        // disconnect all roots in buckets
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != null) {
-                arr[i].next = arr[i];
-                arr[i].prev = arr[i];
-            }
-        }
+//        // disconnect all roots in buckets
+//        for (int i = 0; i < arr.length; i++) {
+//            if (arr[i] != null) {
+//                arr[i].next = arr[i];
+//                arr[i].prev = arr[i];
+//            }
+//        }
         // Update the min and connect all the roots
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null) {
@@ -262,7 +263,7 @@ public class FibonacciHeap {
      */
     public int[] countersRep() {
         // TODO: Check if not nuch bigger than needed and should be initialized with tree amount
-        int[] arr = new int[size+1];
+        int[] arr = new int[size + 1];
         int maxRank = 0;
         HeapNode node = this.first;
         do {
@@ -304,7 +305,11 @@ public class FibonacciHeap {
     public void decreaseKey(HeapNode x, int delta) {
         int new_key = x.key - delta;
         x.key = new_key;
-        if (x.parent != null) {
+        if (x.parent == null) {
+            if (new_key < min.key) {
+                min = x;
+            }
+        } else {
             if ((x.key < x.parent.key) && (x.parent.getMarked() == false)) {
                 remove_decreased_child(x);
                 this.insert(x);
