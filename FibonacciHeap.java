@@ -53,6 +53,8 @@ public class FibonacciHeap {
             first = new HeapNode(key);
             min = first;
             size++;
+            first.prev = first;
+            first.next = first;
             return first;
         } else {
             HeapNode node = new HeapNode(key);
@@ -221,8 +223,26 @@ public class FibonacciHeap {
      * (Note: The size of of the array depends on the maximum order of a tree.)
      */
     public int[] countersRep() {
-        int[] arr = new int[100];
-        return arr; //	 to be replaced by student code
+        int[] arr = new int[size];
+        int maxRank = 0;
+        HeapNode node = this.first;
+        do {
+            arr[node.rank]++;
+            node = node.next;
+            if (node.rank > maxRank) {
+                maxRank = node.rank;
+            }
+        } while (node != this.first);
+
+        return getArrInMaxRankSize(arr, maxRank);
+    }
+
+    private int[] getArrInMaxRankSize(int[] arr, int maxRank) {
+        int[] returnedArr = new int[maxRank +1];
+        for (int i = 0; i <= maxRank; i++) {
+            returnedArr[i] = arr[i];
+        }
+        return returnedArr;
     }
 
     /**
