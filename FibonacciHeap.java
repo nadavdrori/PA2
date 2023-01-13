@@ -31,7 +31,6 @@ public class FibonacciHeap {
     }
 
 
-
     /**
      * public boolean isEmpty()
      * <p>
@@ -61,12 +60,13 @@ public class FibonacciHeap {
             node.prev = first.prev;
             first.prev.next = node;
             first.prev = node;
-            if(node.key < min.key)
+            if (node.key < min.key)
                 min = node;
             size++;
             return node;
         }
     }
+
     public HeapNode insert(HeapNode node_to_insert) {
         if (isEmpty()) {
             first = node_to_insert;
@@ -79,7 +79,7 @@ public class FibonacciHeap {
             node.prev = first.prev;
             first.prev.next = node;
             first.prev = node;
-            if(node.key < min.key)
+            if (node.key < min.key)
                 min = node;
             size++;
             return node;
@@ -92,26 +92,87 @@ public class FibonacciHeap {
      * Deletes the node containing the minimum key.
      */
     public void deleteMin() {
-//        if (isEmpty())
-//            return;
-//        if (min.next == min) {
-//            min = null;
-//            first = null;
-//            size--;
-//            return;
-//        }
-//        HeapNode node = min.next;
-//        while (node != min) {
-//            node.parent = null;
-//            node = node.next;
-//        }
-//        min.prev.next = min.next;
-//        min.next.prev = min.prev;
-//        min = min.next;
-//        size--;
-//        consolidate();
+        if (isEmpty())
+            return;
+        this.min.prev.next = this.min.child;
+        this.min.next.prev = this.min.child.next;
+        this.min.child.prev = this.min.prev;
+        this.min.child.prev.next = this.min.next;
 
+        HeapNode node = min.next;
+        while (node != min) {
+            node.parent = null;
+            node = node.next;
+        }
+        size--;
+
+        consolidation();
     }
+
+    private void consolidation() {
+        if (isEmpty())
+            return;
+        int maxDegree = (int) (Math.log(size) / Math.log(2));
+        HeapNode[] arr = new HeapNode[maxDegree + 1]; // TODO: Check if should add one
+        HeapNode node = first;
+        HeapNode next = node.next;
+        while (node != first) {
+            int rankOfCurrentNode = node.rank;
+            while (arr[rankOfCurrentNode] != null) {
+                HeapNode other = arr[rankOfCurrentNode];
+                if (node.key > other.key) {
+                    HeapNode temp = node;
+                    node = other;
+                    other = temp;
+                }
+                if (other == min)
+                    min = node;
+
+                // Connect node as parent of other
+                other.next.prev = other.prev;
+                other.prev.next = other.next;
+                other.parent = node;
+                if (node.child == null) {
+                    node.child = other;
+                    other.next = other;
+                    other.prev = other;
+                } else {
+                    other.next = node.child;
+                    other.prev = node.child.prev;
+                    node.child.prev.next = other;
+                    node.child.prev = other;
+                }
+                node.rank++;
+                arr[rankOfCurrentNode] = null;
+                rankOfCurrentNode++;
+            }
+            // Update node to the next bucket
+            arr[rankOfCurrentNode] = node;
+            node = next;
+            next = node.next;
+        }
+        min = null;
+
+        // Update the min and connect all the roots
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != null) {
+                if (min == null) {
+                    min = arr[i];
+                    first = min;
+                } else {
+                    // Add to the end of roots list
+                    arr[i].next = first;
+                    arr[i].prev = first.prev;
+                    first.prev.next = arr[i];
+                    first.prev = arr[i];
+                    // Update min
+                    if (arr[i].key < min.key)
+                        min = arr[i];
+                }
+            }
+        }
+    }
+
 
     /**
      * public HeapNode findMin()
@@ -322,7 +383,6 @@ public class FibonacciHeap {
 
 
         public HeapNode(int key) {
-            // TODO: What should be the fields?
             this.key = key;
             this.mark = false;
             this.rank = 0;
