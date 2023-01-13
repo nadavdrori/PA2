@@ -96,19 +96,50 @@ public class FibonacciHeap {
     public void deleteMin() {
         if (isEmpty())
             return;
-        this.min.prev.next = this.min.child;
-        this.min.next.prev = this.min.child.next;
-        this.min.child.prev = this.min.prev;
-        this.min.child.prev.next = this.min.next;
+        size--;
+        if (min == first) {
+            if (min.child == null) {
+                first = null;
+                min = null;
+            } else {
+                handleSingleTreeWithSons();
+            }
+            return;
+        }
+        removeMin();
 
-        HeapNode node = min.next;
-        while (node != min) {
+        HeapNode node = first.next;
+        while (node != first) {
             node.parent = null;
             node = node.next;
         }
-        size--;
 
         consolidation();
+    }
+
+    private void removeMin() {
+        if (min.child == null) {
+            min.prev.next = min.next;
+            min.next.prev = min.prev;
+        } else {
+            min.prev.next = min.child;
+            min.child.prev = min.prev;
+            min.next.prev = min.child.prev;
+            min.child.prev.next = min.next;
+        }
+        min = first;
+    }
+
+    private void handleSingleTreeWithSons() {
+        first = min.child;
+        min = first;
+        HeapNode curr = first;
+        do {
+            if (curr.key < min.key)
+                min = curr;
+            curr.parent = null;
+            curr = curr.next;
+        } while (curr != first);
     }
 
     private void consolidation() {
@@ -118,7 +149,7 @@ public class FibonacciHeap {
         HeapNode[] arr = new HeapNode[maxDegree + 1]; // TODO: Check if should add one
         HeapNode node = first;
         HeapNode next = node.next;
-        while (node != first) {
+        do {
             int rankOfCurrentNode = node.rank;
             while (arr[rankOfCurrentNode] != null) {
                 HeapNode other = arr[rankOfCurrentNode];
@@ -152,9 +183,16 @@ public class FibonacciHeap {
             arr[rankOfCurrentNode] = node;
             node = next;
             next = node.next;
-        }
-        min = null;
+        }while (node != first);
+        min = first;
 
+        // disconnect all roots in buckets
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != null) {
+                arr[i].next = arr[i];
+                arr[i].prev = arr[i];
+            }
+        }
         // Update the min and connect all the roots
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null) {
@@ -223,7 +261,8 @@ public class FibonacciHeap {
      * (Note: The size of of the array depends on the maximum order of a tree.)
      */
     public int[] countersRep() {
-        int[] arr = new int[size];
+        // TODO: Check if not nuch bigger than needed and should be initialized with tree amount
+        int[] arr = new int[size+1];
         int maxRank = 0;
         HeapNode node = this.first;
         do {
@@ -238,7 +277,7 @@ public class FibonacciHeap {
     }
 
     private int[] getArrInMaxRankSize(int[] arr, int maxRank) {
-        int[] returnedArr = new int[maxRank +1];
+        int[] returnedArr = new int[maxRank + 1];
         for (int i = 0; i <= maxRank; i++) {
             returnedArr[i] = arr[i];
         }
@@ -265,14 +304,15 @@ public class FibonacciHeap {
     public void decreaseKey(HeapNode x, int delta) {
         int new_key = x.key - delta;
         x.key = new_key;
-        HeapNode root = x.find_root();
-        if ((x.key < x.parent.key) && (x.parent.getMarked() == false)) {
-            remove_decreased_child(x);
-            this.insert(x);
-        } else if ((x.key < x.parent.key) && (x.parent.getMarked() == true)) {
-            this.setMark(x, true);
-            HeapNode first_not_marked = cascading_cut(x);
-            this.setMark(first_not_marked, true);
+        if (x.parent != null) {
+            if ((x.key < x.parent.key) && (x.parent.getMarked() == false)) {
+                remove_decreased_child(x);
+                this.insert(x);
+            } else if ((x.key < x.parent.key) && (x.parent.getMarked() == true)) {
+                this.setMark(x, true);
+                HeapNode first_not_marked = cascading_cut(x);
+                this.setMark(first_not_marked, true);
+            }
         }
     }
 
@@ -442,14 +482,6 @@ public class FibonacciHeap {
 
         public int getKey() {
             return this.key;
-        }
-
-        public HeapNode find_root() {
-            HeapNode x = this;
-            while (x.parent != null) {
-                x = x.parent;
-            }
-            return x;
         }
     }
 }
