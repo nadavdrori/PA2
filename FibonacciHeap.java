@@ -217,7 +217,8 @@ public class FibonacciHeap {
     private int getsRootsAmount() {
         int rootsCount = 1;
         HeapNode curr = first.next;
-        while (curr != first) {
+        while(curr != first)
+        {
             curr = curr.next;
             rootsCount++;
         }
