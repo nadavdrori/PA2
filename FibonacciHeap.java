@@ -70,6 +70,7 @@ public class FibonacciHeap {
             node.prev = first.prev;
             first.prev.next = node;
             first.prev = node;
+            first = node;
             if (node.key < min.key)
                 min = node;
             return node;
@@ -89,6 +90,7 @@ public class FibonacciHeap {
             node.prev = first.prev;
             first.prev.next = node;
             first.prev = node;
+            first = node;
             if (node.key < min.key)
                 min = node;
             return node;
@@ -187,7 +189,7 @@ public class FibonacciHeap {
                     node.child.prev = son;
                 }
                 son.parent = node;
-                setMark(son, false);
+                setMark(node, false);
                 arr[rankOfCurrentNode] = null;
                 rankOfCurrentNode++;
             }
@@ -199,24 +201,24 @@ public class FibonacciHeap {
         min = first;
 
         int treesCount = 0;
-        boolean isFirst=true;
+        boolean isFirst = true;
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null) {
                 treesCount++;
                 if (isFirst) {
                     first = arr[i];
-                    isFirst=false;
-                }
-                else
-                {
-                    HeapNode curr= first;
-                    while (curr.next!=first) {
+                    first.next = first;
+                    first.prev = first;
+                    isFirst = false;
+                } else {
+                    HeapNode curr = first;
+                    while (curr.next != first) {
                         curr = curr.next;
                     }
-                    curr.next=arr[i];
-                    arr[i].prev=curr;
-                    arr[i].next=first;
-                    first.prev=arr[i];
+                    curr.next = arr[i];
+                    arr[i].prev = curr;
+                    arr[i].next = first;
+                    first.prev = arr[i];
                 }
                 if (arr[i].key < min.key) {
                     min = arr[i];
@@ -229,8 +231,7 @@ public class FibonacciHeap {
     private int getsRootsAmount() {
         int rootsCount = 1;
         HeapNode curr = first.next;
-        while(curr != first)
-        {
+        while (curr != first) {
             curr = curr.next;
             rootsCount++;
         }
