@@ -431,24 +431,24 @@ public class FibonacciHeap {
     public static int[] kMin(FibonacciHeap H, int k) {
         int[] arr = new int[k];
         FibonacciHeap help_heap = new FibonacciHeap();
-        help_heap.insert(H.min);
+        help_heap.insert(H.min.key);
+        help_heap.first.child_pointer = H.min.child;
         for (int i = 0; i < k; i++) {
             arr[i] = help_heap.min.key;
-            HeapNode x = help_heap.min;
-            insert_min_children(help_heap, x);
+            HeapNode min_child = help_heap.min.child_pointer;
+            insert_min_children(help_heap, min_child);
             help_heap.delete(help_heap.min);
         }
         return arr;
     }
 
-    private static void insert_min_children(FibonacciHeap help_heap, HeapNode x) {
-        if (x.child != null) {
-            x = x.child;
-            do {
-                help_heap.insert(x);
-                x = x.next;
+    private static void insert_min_children(FibonacciHeap help_heap, HeapNode min_child) {
+        if (min_child != null) {
+            for (int i=0;i<min_child.parent.rank;i++){
+                help_heap.insert(min_child.key);
+                help_heap.first.child_pointer = min_child.child;
+                min_child = min_child.next;
             }
-            while (x.key != x.parent.child.key);
         }
     }
 
@@ -466,6 +466,7 @@ public class FibonacciHeap {
         public HeapNode next;
         public HeapNode prev;
         public HeapNode parent;
+        public HeapNode child_pointer = null;
 
 
         public HeapNode(int key) {
