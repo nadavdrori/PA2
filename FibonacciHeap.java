@@ -6,9 +6,9 @@
 public class FibonacciHeap {
     private HeapNode min;
     private HeapNode first;
-    private int markedAmount = 0;
+    public int markedAmount = 0;
     private int size;
-    private static int cuts = 0;
+    public static int cuts = 0;
 
     private final float GOLDEN_RATIO = (float) 1.62;
 
@@ -125,10 +125,11 @@ public class FibonacciHeap {
             min.prev.next = min.next;
             min.next.prev = min.prev;
         } else {
+            HeapNode minChildPrev = min.child.prev;
             min.prev.next = min.child;
             min.child.prev = min.prev;
-            min.next.prev = min.child.prev;
-            min.child.prev.next = min.next;
+            min.next.prev = minChildPrev;
+            minChildPrev.next = min.next;
         }
         min = first;
     }
