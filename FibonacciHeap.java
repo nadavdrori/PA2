@@ -345,7 +345,7 @@ public class FibonacciHeap {
      */
     private HeapNode cascading_cut(HeapNode xNode) {
         HeapNode parent;
-        while (xNode.getMarked() == true) {
+        while ((xNode.getMarked() == true) || (xNode.getParent() != null)) {
             parent = xNode.parent;
             remove_decreased_child(xNode);
             this.insert(xNode);
