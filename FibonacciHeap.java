@@ -198,24 +198,17 @@ public class FibonacciHeap {
                 min = arr[i];
         }
 
-        // Update the min and connect all the roots
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != null) {
-                if (min == null) {
-                    min = arr[i];
-                    first = min;
-                } else {
-                    // Add to the end of roots list
-                    arr[i].next = first;
-                    arr[i].prev = first.prev;
-                    first.prev.next = arr[i];
-                    first.prev = arr[i];
-                    // Update min
-                    if (arr[i].key < min.key)
-                        min = arr[i];
-                }
-            }
-        }
+        updateMin();
+        System.out.println();
+    }
+
+    private void updateMin() {
+        HeapNode curr = first;
+        do {
+            if (curr.key < min.key)
+                min = curr;
+            curr = curr.next;
+        } while (curr != first);
     }
 
     private int getsRootsAmount() {
@@ -333,6 +326,7 @@ public class FibonacciHeap {
         } else {
             if ((x.key < x.parent.key) && (x.parent.getMarked() == false)) {
                 remove_decreased_child(x);
+                this.size--; // TODO: Nadav please remove me I should be in remove_decreased_child
                 this.insert(x);
             } else if ((x.key < x.parent.key) && (x.parent.getMarked() == true)) {
                 this.setMark(x, true);
