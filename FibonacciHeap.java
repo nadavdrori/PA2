@@ -10,6 +10,8 @@ public class FibonacciHeap {
     private int size;
     public static int cuts = 0;
 
+    public static int linksAmount = 0;
+
     private final float GOLDEN_RATIO = (float) 1.62;
 
     public HeapNode getMin() {
@@ -156,6 +158,7 @@ public class FibonacciHeap {
             HeapNode next = node.next;
             int rankOfCurrentNode = node.rank;
             while (arr[rankOfCurrentNode] != null) {
+                this.linksAmount++;
                 HeapNode other = arr[rankOfCurrentNode];
                 if (node.key > other.key) {
                     HeapNode temp = node;
@@ -400,7 +403,7 @@ public class FibonacciHeap {
      * tree which has larger value in its root under the other tree.
      */
     public static int totalLinks() {
-        return -345; // should be replaced by student code
+        return linksAmount;
     }
 
     /**
