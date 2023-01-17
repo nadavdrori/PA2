@@ -8,9 +8,11 @@ public class FibonacciHeap {
     private HeapNode first;
     public int markedAmount = 0;
     private int size;
+    private int treesAmount;
     public static int cuts = 0;
 
     public static int linksAmount = 0;
+
 
     private final float GOLDEN_RATIO = (float) 1.62;
 
@@ -27,11 +29,12 @@ public class FibonacciHeap {
     }
 
     private void setMark(HeapNode node, boolean isMarked) {
-        node.mark = isMarked;
-        if (isMarked == true) {
+        if (isMarked && !node.getMarked()) {
             this.markedAmount++;
-        } else
+        } else if (!isMarked && node.getMarked()) {
             this.markedAmount--;
+        }
+        node.mark = isMarked;
     }
 
 
@@ -53,10 +56,11 @@ public class FibonacciHeap {
      * Returns the newly created node.
      */
     public HeapNode insert(int key) {
+        size++;
+        treesAmount++;
         if (isEmpty()) {
             first = new HeapNode(key);
             min = first;
-            size++;
             first.prev = first;
             first.next = first;
             return first;
@@ -68,16 +72,16 @@ public class FibonacciHeap {
             first.prev = node;
             if (node.key < min.key)
                 min = node;
-            size++;
             return node;
         }
     }
 
     public HeapNode insert(HeapNode node_to_insert) {
+        size++;
+        treesAmount++;
         if (isEmpty()) {
             first = node_to_insert;
             min = first;
-            size++;
             return first;
         } else {
             HeapNode node = node_to_insert;
@@ -87,7 +91,6 @@ public class FibonacciHeap {
             first.prev = node;
             if (node.key < min.key)
                 min = node;
-            size++;
             return node;
         }
     }
@@ -105,6 +108,7 @@ public class FibonacciHeap {
             if (min.child == null) {
                 first = null;
                 min = null;
+                treesAmount--;
             } else {
                 handleSingleTreeWithSons();
             }
@@ -126,6 +130,7 @@ public class FibonacciHeap {
         if (min.child == null) {
             min.prev.next = min.next;
             min.next.prev = min.prev;
+            treesAmount--;
         } else {
             HeapNode minChildPrev = min.child.prev;
             min.prev.next = min.child;
@@ -147,6 +152,7 @@ public class FibonacciHeap {
             curr = curr.next;
         } while (curr != first);
     }
+
     private void consolidation() {
         int rootsAmount = getsRootsAmount();
         if (isEmpty())
@@ -154,7 +160,7 @@ public class FibonacciHeap {
         int maxDegree = (int) (Math.ceil(Math.log(size) / Math.log(GOLDEN_RATIO)));
         HeapNode[] arr = new HeapNode[maxDegree + 1];
         HeapNode node = first;
-        for(int i = 0; i < rootsAmount; i++) {
+        for (int i = 0; i < rootsAmount; i++) {
             HeapNode next = node.next;
             int rankOfCurrentNode = node.rank;
             while (arr[rankOfCurrentNode] != null) {
@@ -196,29 +202,22 @@ public class FibonacciHeap {
         }
         min = first;
 
+        int treesCount = 0;
         for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != null && arr[i].key < min.key)
-                min = arr[i];
+            if (arr[i] != null) {
+                treesCount++;
+                if (arr[i].key < min.key) {
+                    min = arr[i];
+                }
+            }
         }
-
-        updateMin();
-        System.out.println();
-    }
-
-    private void updateMin() {
-        HeapNode curr = first;
-        do {
-            if (curr.key < min.key)
-                min = curr;
-            curr = curr.next;
-        } while (curr != first);
+        this.treesAmount = treesCount;
     }
 
     private int getsRootsAmount() {
         int rootsCount = 1;
         HeapNode curr = first.next;
-        while(curr != first)
-        {
+        while (curr != first) {
             curr = curr.next;
             rootsCount++;
         }
@@ -391,7 +390,7 @@ public class FibonacciHeap {
      * plus twice the number of marked nodes in the heap.
      */
     public int potential() {
-        return -234; // should be replaced by student code
+        return this.treesAmount + 2 * this.markedAmount;
     }
 
     /**
