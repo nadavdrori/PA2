@@ -329,12 +329,12 @@ public class FibonacciHeap {
         } else {
             if ((x.key < x.parent.key) && (x.parent.getMarked() == false)) {
                 remove_decreased_child(x);
-                this.size--; // TODO: Nadav please remove me I should be in remove_decreased_child
                 this.insert(x);
             } else if ((x.key < x.parent.key) && (x.parent.getMarked() == true)) {
                 this.setMark(x, true);
                 HeapNode first_not_marked = cascading_cut(x);
-                this.setMark(first_not_marked, true);
+                if (first_not_marked.parent != null)
+                    this.setMark(first_not_marked, true);
             }
         }
     }
@@ -361,10 +361,14 @@ public class FibonacciHeap {
      */
     private void remove_decreased_child(HeapNode x) {
         cuts++;
+        this.size--;
         this.setMark(x.getParent(), true);
         x.getParent().rank--;
         if (x.parent.child.key == x.key) {
-            x.parent.child = x.next;
+            if (x.next.key == x.key)
+                x.parent.child = null;
+            else
+                x.parent.child = x.next;
         }
         x.parent = null;
         x.next.prev = x.prev;
@@ -378,7 +382,7 @@ public class FibonacciHeap {
      * This function returns the current number of non-marked items in the heap
      */
     public int nonMarked() {
-        return this.markedAmount;
+        return (this.size - this.markedAmount);
     }
 
     /**
