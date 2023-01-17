@@ -292,7 +292,9 @@ public class FibonacciHeap {
      * (Note: The size of of the array depends on the maximum order of a tree.)
      */
     public int[] countersRep() {
-        // TODO: Check if not nuch bigger than needed and should be initialized with tree amount
+        if(isEmpty()) {
+            return new int[0];
+        }
         int[] arr = new int[size + 1];
         int maxRank = 0;
         HeapNode node = this.first;
