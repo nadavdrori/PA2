@@ -29,6 +29,10 @@ public class FibonacciHeap {
     }
 
     private void setMark(HeapNode node, boolean isMarked) {
+        if (node == null) {
+            return;
+        }
+
         if (isMarked && !node.getMarked()) {
             this.markedAmount++;
         } else if (!isMarked && node.getMarked()) {
