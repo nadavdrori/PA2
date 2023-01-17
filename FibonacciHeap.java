@@ -29,6 +29,10 @@ public class FibonacciHeap {
     }
 
     private void setMark(HeapNode node, boolean isMarked) {
+        if (node == null) {
+            return;
+        }
+
         if (isMarked && !node.getMarked()) {
             this.markedAmount++;
         } else if (!isMarked && node.getMarked()) {
@@ -70,6 +74,7 @@ public class FibonacciHeap {
             node.prev = first.prev;
             first.prev.next = node;
             first.prev = node;
+            first = node;
             if (node.key < min.key)
                 min = node;
             return node;
@@ -89,6 +94,7 @@ public class FibonacciHeap {
             node.prev = first.prev;
             first.prev.next = node;
             first.prev = node;
+            first = node;
             if (node.key < min.key)
                 min = node;
             return node;
@@ -165,33 +171,29 @@ public class FibonacciHeap {
             int rankOfCurrentNode = node.rank;
             while (arr[rankOfCurrentNode] != null) {
                 this.linksAmount++;
-                HeapNode other = arr[rankOfCurrentNode];
-                if (node.key > other.key) {
+                HeapNode son = arr[rankOfCurrentNode];
+                if (node.key > son.key) {
                     HeapNode temp = node;
-                    node = other;
-                    other = temp;
+                    node = son;
+                    son = temp;
                 }
-                if (other == first)
-                    first = node;
-                if (other == min)
-                    min = node;
 
-                // Connect node as parent of other
-                other.next.prev = other.prev;
-                other.prev.next = other.next;
+                // Connect node as parent of son
+                son.next.prev = son.prev;
+                son.prev.next = son.next;
                 node.rank++;
                 if (node.child == null) {
-                    node.child = other;
-                    other.next = other;
-                    other.prev = other;
+                    node.child = son;
+                    son.next = son;
+                    son.prev = son;
                 } else {
-                    other.next = node.child;
-                    other.prev = node.child.prev;
-                    node.child.prev.next = other;
-                    node.child.prev = other;
+                    son.next = node.child;
+                    son.prev = node.child.prev;
+                    node.child.prev.next = son;
+                    node.child.prev = son;
                 }
-                other.parent = node;
-                setMark(other, false);
+                son.parent = node;
+                setMark(node, false);
                 arr[rankOfCurrentNode] = null;
                 rankOfCurrentNode++;
             }
@@ -203,9 +205,25 @@ public class FibonacciHeap {
         min = first;
 
         int treesCount = 0;
+        boolean isFirst = true;
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null) {
                 treesCount++;
+                if (isFirst) {
+                    first = arr[i];
+                    first.next = first;
+                    first.prev = first;
+                    isFirst = false;
+                } else {
+                    HeapNode curr = first;
+                    while (curr.next != first) {
+                        curr = curr.next;
+                    }
+                    curr.next = arr[i];
+                    arr[i].prev = curr;
+                    arr[i].next = first;
+                    first.prev = arr[i];
+                }
                 if (arr[i].key < min.key) {
                     min = arr[i];
                 }
@@ -278,7 +296,9 @@ public class FibonacciHeap {
      * (Note: The size of of the array depends on the maximum order of a tree.)
      */
     public int[] countersRep() {
-        // TODO: Check if not nuch bigger than needed and should be initialized with tree amount
+        if(isEmpty()) {
+            return new int[0];
+        }
         int[] arr = new int[size + 1];
         int maxRank = 0;
         HeapNode node = this.first;
