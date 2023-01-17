@@ -512,7 +512,6 @@ public class TestFibonacciHeap {
         assertTrue(heap.isEmpty());
     }
 
-    // TODO: Talmi dont understand the test
     @Test
     @Order(2)
     public void testInsertDeleteSanity() {
@@ -547,7 +546,7 @@ public class TestFibonacciHeap {
         assertEquals(1, heap.findMin().getKey());
         assertTrue(Arrays.equals(new int[] { 1 }, arr));
     }
-
+// The test failed
     @Test
     @Order(6)
     public void testInsertionDeletion1() {
@@ -557,8 +556,13 @@ public class TestFibonacciHeap {
         heap.deleteMin();
         assertValidHeap(heap);
         testDeletion(heap, nodes.get(9));
+//        Map<Integer, FibonacciHeap.HeapNode> nodes = testInsertion(
+//                heap, 2, 1, 3);
+//        heap.deleteMin();
+//        assertValidHeap(heap);
+//        testDeletion(heap, nodes.get(1));
     }
-
+// Talmi: Pass
     @Test
     @Order(3)
     public void testInsertionDeletion2() {

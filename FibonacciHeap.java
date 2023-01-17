@@ -145,59 +145,14 @@ public class FibonacciHeap {
             curr = curr.next;
         } while (curr != first);
     }
-
-//    private void consolidation() {
-//        int maxDegree = (int) (Math.log(size) / Math.log(GOLDEN_RATIO));
-//        HeapNode[] arr = new HeapNode[maxDegree + 1];
-//        HeapNode curr = first;
-//        do {
-//            HeapNode next = curr.next;
-//            int degree = curr.degree;
-//            while (arr[degree] != null) {
-//                HeapNode other = arr[degree];
-//                if (curr.key > other.key) {
-//                    HeapNode temp = curr;
-//                    curr = other;
-//                    other = temp;
-//                }
-//                if (other == first)
-//                    first = curr;
-//                if (other == min)
-//                    min = curr;
-//                other.next.prev = other.prev;
-//                other.prev.next = other.next;
-//                curr.degree++;
-//                if (curr.child == null) {
-//                    curr.child = other;
-//                    other.next = other;
-//                    other.prev = other;
-//                } else {
-//                    other.next = curr.child;
-//                    other.prev = curr.child.prev;
-//                    curr.child.prev.next = other;
-//                    curr.child.prev = other;
-//                }
-//                other.parent = curr;
-//                setMark(other, false);
-//                arr[degree] = null;
-//                degree++;
-//            }
-//            arr[degree] = curr;
-//            curr = next;
-//        } while (curr != first);
-//        min = first;
-//        for (int i = 0; i < arr.length; i++) {
-//            if (arr[i] != null && arr[i].key < min.key)
-//                min = arr[i];
-//        }
-//    }
     private void consolidation() {
+        int rootsAmount = getsRootsAmount();
         if (isEmpty())
             return;
         int maxDegree = (int) (Math.ceil(Math.log(size) / Math.log(GOLDEN_RATIO)));
         HeapNode[] arr = new HeapNode[maxDegree + 1];
         HeapNode node = first;
-        do {
+        for(int i = 0; i < rootsAmount; i++) {
             HeapNode next = node.next;
             int rankOfCurrentNode = node.rank;
             while (arr[rankOfCurrentNode] != null) {
@@ -235,38 +190,43 @@ public class FibonacciHeap {
             // Update node to the next bucket
             arr[rankOfCurrentNode] = node;
             node = next;
-        } while (node != first);
+        }
         min = first;
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != null && arr[i].key < min.key)
                 min = arr[i];
         }
-//        // disconnect all roots in buckets
-//        for (int i = 0; i < arr.length; i++) {
-//            if (arr[i] != null) {
-//                arr[i].next = arr[i];
-//                arr[i].prev = arr[i];
-//            }
-//        }
+
         // Update the min and connect all the roots
-//        for (int i = 0; i < arr.length; i++) {
-//            if (arr[i] != null) {
-//                if (min == null) {
-//                    min = arr[i];
-//                    first = min;
-//                } else {
-//                    // Add to the end of roots list
-//                    arr[i].next = first;
-//                    arr[i].prev = first.prev;
-//                    first.prev.next = arr[i];
-//                    first.prev = arr[i];
-//                    // Update min
-//                    if (arr[i].key < min.key)
-//                        min = arr[i];
-//                }
-//            }
-//        }
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != null) {
+                if (min == null) {
+                    min = arr[i];
+                    first = min;
+                } else {
+                    // Add to the end of roots list
+                    arr[i].next = first;
+                    arr[i].prev = first.prev;
+                    first.prev.next = arr[i];
+                    first.prev = arr[i];
+                    // Update min
+                    if (arr[i].key < min.key)
+                        min = arr[i];
+                }
+            }
+        }
+    }
+
+    private int getsRootsAmount() {
+        int rootsCount = 1;
+        HeapNode curr = first.next;
+        while(curr != first)
+        {
+            curr = curr.next;
+            rootsCount++;
+        }
+        return rootsCount;
     }
 
 
