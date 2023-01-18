@@ -132,10 +132,12 @@ public class FibonacciHeap {
     }
 
     private void removeMin() {
-        first = min.next;
+        if(first==min) {
+            first = min.next;
+        }
         if (min.child == null) {
-            min.prev.next = min.next;
             min.next.prev = min.prev;
+            min.prev.next = min.next;
             treesAmount--;
         } else {
             HeapNode minChildPrev = min.child.prev;
@@ -181,18 +183,20 @@ public class FibonacciHeap {
                 // Connect node as parent of son
                 son.next.prev = son.prev;
                 son.prev.next = son.next;
-                node.rank++;
-                if (node.child == null) {
-                    node.child = son;
+                if (node.rank == 0) {
                     son.next = son;
                     son.prev = son;
+                    node.child = son;
+                    son.parent = node;
                 } else {
                     son.next = node.child;
                     son.prev = node.child.prev;
                     node.child.prev.next = son;
                     node.child.prev = son;
+                    node.child = son;
+                    son.parent = node;
                 }
-                son.parent = node;
+                node.rank++;
                 setMark(node, false);
                 arr[rankOfCurrentNode] = null;
                 rankOfCurrentNode++;
