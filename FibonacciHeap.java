@@ -381,7 +381,8 @@ public class FibonacciHeap {
     private void remove_decreased_child(HeapNode x) {
         cuts++;
         this.size--;
-        this.setMark(x.getParent(), true);
+        if (x.getParent().getParent() != null)
+            this.setMark(x.getParent(), true);
         x.getParent().rank--;
         if (x.parent.child.key == x.key) {
             if (x.next.key == x.key)
