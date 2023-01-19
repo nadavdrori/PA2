@@ -28,6 +28,12 @@ public class FibonacciHeap {
         return size;
     }
 
+    /**
+     * public void setMark(HeapNode x, boolean isMarked)
+     * <p>
+     *     Sets the mark of the node to be isMarked.
+     *     Complexity: O(1)
+     */
     private void setMark(HeapNode node, boolean isMarked) {
         if (node == null) {
             return;
@@ -131,6 +137,12 @@ public class FibonacciHeap {
         consolidation();
     }
 
+    /**
+     * private void removeMin()
+     * <p>
+     *     Removes the minimum node from the heap.
+     *     Complexity: O(1)
+     */
     private void removeMin() {
         if(first==min) {
             first = min.next;
@@ -149,6 +161,12 @@ public class FibonacciHeap {
         min = first;
     }
 
+    /**
+     * private void handleSingleTreeWithSons()
+     * <p>
+     *     Handles the case where the heap has only one tree with sons.
+     *     Complexity: O(n)
+     */
     private void handleSingleTreeWithSons() {
         first = min.child;
         min = first;
@@ -161,6 +179,12 @@ public class FibonacciHeap {
         } while (curr != first);
     }
 
+    /**
+     * private void consolidation()
+     * <p>
+     *     Consolidates the heap.
+     *     Complexity: O(n)
+     */
     private void consolidation() {
         int rootsAmount = getsRootsAmount();
         if (isEmpty())
@@ -236,6 +260,12 @@ public class FibonacciHeap {
         this.treesAmount = treesCount;
     }
 
+    /**
+     * private int getsRootsAmount()
+     * <p>
+     *     Returns the amount of roots in the heap.
+     *     Complexity: O(n)
+     */
     private int getsRootsAmount() {
         int rootsCount = 1;
         HeapNode curr = first.next;
@@ -317,6 +347,12 @@ public class FibonacciHeap {
         return getArrInMaxRankSize(arr, maxRank);
     }
 
+    /**
+     * private int[] getArrInMaxRankSize(int[] arr, int maxRank)
+     * <p>
+     *     Returns an array of counters in the size of the max rank.
+     *     Complexity: O(log(n))
+     */
     private int[] getArrInMaxRankSize(int[] arr, int maxRank) {
         int[] returnedArr = new int[maxRank + 1];
         for (int i = 0; i <= maxRank; i++) {
