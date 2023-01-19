@@ -24,15 +24,11 @@ public class FibonacciHeap {
         return first;
     }
 
-    public int getSize() {
-        return size;
-    }
-
     /**
      * public void setMark(HeapNode x, boolean isMarked)
      * <p>
-     *     Sets the mark of the node to be isMarked.
-     *     Complexity: O(1)
+     * Sets the mark of the node to be isMarked.
+     * Complexity: O(1)
      */
     private void setMark(HeapNode node, boolean isMarked) {
         if (node == null) {
@@ -89,8 +85,9 @@ public class FibonacciHeap {
 
     /**
      * public HeapNode insert(HeapNode node_to_insert) {
-        * <p>
-     *     Inserts the given node to the heap.
+     * <p>
+     * Inserts the given node to the heap.
+     * complexity: O(1)
      */
     public HeapNode insert(HeapNode node_to_insert) {
         size++;
@@ -147,11 +144,11 @@ public class FibonacciHeap {
     /**
      * private void removeMin()
      * <p>
-     *     Removes the minimum node from the heap.
-     *     Complexity: O(1)
+     * Removes the minimum node from the heap.
+     * Complexity: O(1)
      */
     private void removeMin() {
-        if(first==min) {
+        if (first == min) {
             first = min.next;
         }
         if (min.child == null) {
@@ -171,8 +168,8 @@ public class FibonacciHeap {
     /**
      * private void handleSingleTreeWithSons()
      * <p>
-     *     Handles the case where the heap has only one tree with sons.
-     *     Complexity: O(n)
+     * Handles the case where the heap has only one tree with sons.
+     * Complexity: O(n)
      */
     private void handleSingleTreeWithSons() {
         first = min.child;
@@ -191,8 +188,8 @@ public class FibonacciHeap {
     /**
      * private void consolidation()
      * <p>
-     *     Consolidates the heap.
-     *     Complexity: O(n)
+     * Consolidates the heap.
+     * Complexity: O(n)
      */
     private void consolidation() {
         int rootsAmount = getsRootsAmount();
@@ -272,8 +269,8 @@ public class FibonacciHeap {
     /**
      * private int getsRootsAmount()
      * <p>
-     *     Returns the amount of roots in the heap.
-     *     Complexity: O(n)
+     * Returns the amount of roots in the heap.
+     * Complexity: O(n)
      */
     private int getsRootsAmount() {
         int rootsCount = 1;
@@ -302,6 +299,8 @@ public class FibonacciHeap {
      * public void meld (FibonacciHeap heap2)
      * <p>
      * Melds heap2 with the current heap.
+     * <p>
+     * Complexity: O(1)
      */
     public void meld(FibonacciHeap heap2) {
         if (this.isEmpty()) {
@@ -329,6 +328,8 @@ public class FibonacciHeap {
      * public int size()
      * <p>
      * Returns the number of elements in the heap.
+     * <p>
+     * Complexity: O(1)
      */
     public int size() {
         return size;
@@ -339,9 +340,11 @@ public class FibonacciHeap {
      * <p>
      * Return an array of counters. The i-th entry contains the number of trees of order i in the heap.
      * (Note: The size of of the array depends on the maximum order of a tree.)
+     * <p>
+     * Complexity: O(n)
      */
     public int[] countersRep() {
-        if(isEmpty()) {
+        if (isEmpty()) {
             return new int[0];
         }
         int[] arr = new int[size + 1];
@@ -361,8 +364,8 @@ public class FibonacciHeap {
     /**
      * private int[] getArrInMaxRankSize(int[] arr, int maxRank)
      * <p>
-     *     Returns an array of counters in the size of the max rank.
-     *     Complexity: O(log(n))
+     * Returns an array of counters in the size of the max rank.
+     * Complexity: O(log(n))
      */
     private int[] getArrInMaxRankSize(int[] arr, int maxRank) {
         int[] returnedArr = new int[maxRank + 1];
@@ -388,6 +391,7 @@ public class FibonacciHeap {
      * <p>
      * Decreases the key of the node x by a non-negative value delta. The structure of the heap should be updated
      * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
+     * complexity: O(log(n))
      */
     public void decreaseKey(HeapNode x, int delta) {
         int new_key = x.key - delta;
@@ -413,6 +417,7 @@ public class FibonacciHeap {
      * private HeapNode cascading_cut(HeapNode xNode)
      * This method is used to cut the node x from its parent and then to cut the parent from its parent and so on.
      * The method returns the first node that is not marked.
+     * Complexity: O(log(n))
      */
     private HeapNode cascading_cut(HeapNode xNode) {
         HeapNode parent;
@@ -428,6 +433,7 @@ public class FibonacciHeap {
     /**
      * private void remove_decreased_child(HeapNode x)
      * This method is used to remove the node x from its parent.
+     * Complexity: O(1)
      */
     private void remove_decreased_child(HeapNode x) {
         cuts++;
@@ -451,6 +457,8 @@ public class FibonacciHeap {
      * public int nonMarked()
      * <p>
      * This function returns the current number of non-marked items in the heap
+     * <p>
+     * Complexity: O(1)
      */
     public int nonMarked() {
         return (this.size - this.markedAmount);
@@ -464,6 +472,7 @@ public class FibonacciHeap {
      * <p>
      * In words: The potential equals to the number of trees in the heap
      * plus twice the number of marked nodes in the heap.
+     *  complexity: O(1)
      */
     public int potential() {
         return this.treesAmount + 2 * this.markedAmount;
@@ -476,6 +485,7 @@ public class FibonacciHeap {
      * run-time of the program. A link operation is the operation which gets as input two
      * trees of the same rank, and generates a tree of rank bigger by one, by hanging the
      * tree which has larger value in its root under the other tree.
+     * complexity: O(1)
      */
     public static int totalLinks() {
         return linksAmount;
@@ -487,6 +497,7 @@ public class FibonacciHeap {
      * This static function returns the total number of cut operations made during the
      * run-time of the program. A cut operation is the operation which disconnects a subtree
      * from its parent (during decreaseKey/delete methods).
+     * complexity: O(1)
      */
     public static int totalCuts() {
         return cuts;
@@ -499,6 +510,7 @@ public class FibonacciHeap {
      * The function should run in O(k*deg(H)). (deg(H) is the degree of the only tree in H.)
      * <p>
      * ###CRITICAL### : you are NOT allowed to change H.
+     * complexity: O(k*deg(H))
      */
     public static int[] kMin(FibonacciHeap H, int k) {
         int[] arr = new int[k];
@@ -521,7 +533,7 @@ public class FibonacciHeap {
      */
     private static void insert_min_children(FibonacciHeap help_heap, HeapNode min_child) {
         if (min_child != null) {
-            for (int i=0;i<min_child.parent.rank;i++){
+            for (int i = 0; i < min_child.parent.rank; i++) {
                 help_heap.insert(min_child.key);
                 help_heap.first.child_pointer = min_child.child;
                 min_child = min_child.next;
