@@ -171,11 +171,13 @@ public class FibonacciHeap {
         first = min.child;
         min = first;
         HeapNode curr = first;
+        treesAmount--;
         do {
             if (curr.key < min.key)
                 min = curr;
             curr.parent = null;
             curr = curr.next;
+            treesAmount++;
         } while (curr != first);
     }
 
@@ -299,11 +301,13 @@ public class FibonacciHeap {
             this.first = heap2.first;
             this.min = heap2.min;
             this.size = heap2.size;
+            this.treesAmount = heap2.treesAmount;
             return;
         }
         if (!heap2.isEmpty()) {
             this.markedAmount += heap2.markedAmount;
             this.size += heap2.size;
+            this.treesAmount += heap2.treesAmount;
             if (heap2.min.key < this.min.key)
                 this.min = heap2.min;
             HeapNode last_tree = this.first.prev;
