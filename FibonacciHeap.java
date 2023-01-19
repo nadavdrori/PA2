@@ -87,6 +87,11 @@ public class FibonacciHeap {
         }
     }
 
+    /**
+     * public HeapNode insert(HeapNode node_to_insert) {
+        * <p>
+     *     Inserts the given node to the heap.
+     */
     public HeapNode insert(HeapNode node_to_insert) {
         size++;
         treesAmount++;
@@ -111,6 +116,8 @@ public class FibonacciHeap {
      * public void deleteMin()
      * <p>
      * Deletes the node containing the minimum key.
+     * <p>
+     * Complexity: O(n)
      */
     public void deleteMin() {
         if (isEmpty())
@@ -507,6 +514,11 @@ public class FibonacciHeap {
         return arr;
     }
 
+    /**
+     * private static void insert_min_children(FibonacciHeap help_heap, HeapNode min_child)
+     * This method is used to insert the children of the min node to the help heap.
+     * The method runs in O(deg(H)).
+     */
     private static void insert_min_children(FibonacciHeap help_heap, HeapNode min_child) {
         if (min_child != null) {
             for (int i=0;i<min_child.parent.rank;i++){
