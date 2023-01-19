@@ -1,8 +1,8 @@
 
 public class question1 {
     public static void main(String[] args) {
-        int[] counts = {5, 10, 15, 20};
-        for (int i : counts) {
+//        int[] counts = {5, 10, 15, 20};
+        for (int i =5; i<=20; i+=5) {
             FibonacciHeap heap = new FibonacciHeap();
             int m = (int)(Math.pow(2, i));
             FibonacciHeap.HeapNode[] node_pointers = new FibonacciHeap.HeapNode[m];
@@ -14,8 +14,11 @@ public class question1 {
                     node_pointers[j] = heap.getFirst();
             }
             heap.deleteMin();
-            for (int j = (int)(Math.log(m) / Math.log(2)); j >= 1; j--) {
-                heap.decreaseKey(node_pointers[(int)((m-Math.pow(2, i))+1)],m+1);
+            int intialValue = (int) (Math.log(m) / Math.log(2));
+            for (int j = intialValue; j >= 1; j--) {
+                int index =  m - (int)Math.pow(2, i) + 1;
+                FibonacciHeap.HeapNode nodeToDecrease = node_pointers[index];
+                heap.decreaseKey(nodeToDecrease,m+1);
             }
             long endTime = System.currentTimeMillis();
             System.out.println("Iteration " + i + ":" + m);
