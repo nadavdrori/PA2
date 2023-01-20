@@ -391,7 +391,7 @@ public class FibonacciHeap {
      * <p>
      * Decreases the key of the node x by a non-negative value delta. The structure of the heap should be updated
      * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
-     * complexity: O(log(n))
+     * complexity: O(n)
      */
     public void decreaseKey(HeapNode x, int delta) {
         int new_key = x.key - delta;
@@ -417,7 +417,7 @@ public class FibonacciHeap {
      * private HeapNode cascading_cut(HeapNode xNode)
      * This method is used to cut the node x from its parent and then to cut the parent from its parent and so on.
      * The method returns the first node that is not marked.
-     * Complexity: O(log(n))
+     * Complexity: O(n)
      */
     private HeapNode cascading_cut(HeapNode xNode) {
         HeapNode parent;
